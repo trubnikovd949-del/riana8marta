@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>С 8 Марта!</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background: #fdfbfb;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: #4a4a4a;
+            min-height: 100vh;
+            overflow-y: auto; /* Разрешаем прокрутку */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        /* Экран с кнопкой */
+        #welcome-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle, #ffdde1 0%, #ee9ca7 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            /* Убрали transition, чтобы исчезало мгновенно по клику */
+        }
+
+        .flower-btn {
+            font-size: 100px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            transition: transform 0.2s;
+            filter: drop-shadow(0 10px 15px rgba(0,0,0,0.3));
+            animation: bounce 1.5s infinite;
+        }
+
+        .flower-btn:active {
+            transform: scale(0.9);
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-15px); }
+        }
+
+        /* Контейнер открытки */
+        #card-container {
+            display: none; /* Скрыто изначально */
+            max-width: 800px;
+            width: 90%;
+            margin: 40px auto;
+            text-align: center;
+            padding-bottom: 50px;
+            /* Анимация плавного появления */
+            animation: fadeIn 1.5s ease-in; 
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        h1 {
+            color: #d63384;
+            font-size: 2.2rem;
+            margin-bottom: 10px;
+        }
+
+        .video-wrapper {
+            width: 100%;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+            margin: 30px 0;
+            background: #000;
+        }
+
+        video {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        .greeting-text {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            line-height: 1.6;
+            font-size: 1.1rem;
+            border: 1px solid #ffcce0;
+        }
+
+        .signature {
+            margin-top: 20px;
+            font-weight: bold;
+            color: #d63384;
+            font-size: 1.2rem;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Экран приветствия -->
+    <div id="welcome-screen">
+        <button class="flower-btn" onclick="showCard()">🌷💐🌹</button>
+    </div>
+
+    <!-- Открытка -->
+    <div id="card-container">
+        <h1>Любимые Мама и Бабушка!</h1>
+        <p>С Международным женским днем!</p>
+
+        <div class="video-wrapper">
+            <!-- 
+               ВАЖНО: Файл video.mp4 должен лежать рядом с этим файлом.
+               playsinline - для корректной работы на iPhone.
+            -->
+            <video id="mainVideo" playsinline controls>
+                <source src="Риана (2).mp4" type="video/mp4">
+                <!-- Если видео не загрузится, покажется этот текст -->
+                <p style="color: white; padding: 20px;">Видео не загрузилось. Проверьте, лежит ли файл video.mp4 рядом с этим файлом.</p>
+            </video>
+        </div>
+
+        <div class="greeting-text">
+            <p>Дорогие мои! Вы самые родные и красивые. Желаю вам здоровья, счастья и чтобы каждый день приносил только радость.</p>
+            <div class="signature">С любовью, Ваш сын/внук</div>
+            <div style="font-size: 30px; margin-top: 10px;">❤️🌷❤️</div>
+        </div>
+    </div>
+
+    <script>
+        function showCard() {
+            // 1. Находим элементы
+            const welcomeScreen = document.getElementById('welcome-screen');
+            const cardContainer = document.getElementById('card-container');
+            const video = document.getElementById('mainVideo');
+
+            // 2. Мгновенно скрываем кнопку
+            welcomeScreen.style.display = 'none';
+
+            // 3. Показываем открытку
+            cardContainer.style.display = 'block';
+
+            // 4. Запускаем видео с замедлением
+            // Небольшая задержка в 100мс нужна, чтобы браузер успел отрисовать блок перед стартом видео
+            setTimeout(() => {
+                video.playbackRate = 0.5; // Скорость 50% (в 2 раза медленнее)
+                
+                // Пытаемся запустить видео
+                var playPromise = video.play();
+
+                if (playPromise !== undefined) {
+                    playPromise.then(_ => {
+                        // Видео запустилось успешно
+                        console.log("Видео играет медленно");
+                    })
+                    .catch(error => {
+                        // Автоматическое воспроизведение было предотвращено браузером
+                        console.log("Автозапуск заблокирован браузером, нажмите Play вручную");
+                    });
+                }
+            }, 100);
+        }
+    </script>
+</body>
+</html>
